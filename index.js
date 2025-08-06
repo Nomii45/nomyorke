@@ -61,47 +61,52 @@ const path = "./data.json";
 const git = simpleGit();
 
 const makeCommits = async (n) => {
-  if (n === 0) {
-    try {
-      // Force push to GitHub
-      await git.push('origin', 'main', { '--force': null });
-      console.log("✅ All commits force pushed to GitHub.");
-    } catch (err) {
-      console.error("❌ Error during final push:", err);
+    if (n === 0) {
+        try {
+            // Force push to GitHub
+            await git.push('origin', 'main', { '--force': null });
+            console.log("✅ All commits force pushed to GitHub.");
+        } catch (err) {
+            console.error("❌ Error during final push:", err);
+        }
+        return;
     }
-    return;
-  }
 
-  const x = random.int(0, 54); // horizontal weeks
-  const y = random.int(0, 6);  // vertical days
+    const x = random.int(0, 54); // horizontal weeks
+    const y = random.int(0, 6);  // vertical days
 
-  const date = moment()
-    .subtract(1, 'y')
-    .add(1, 'd')
-    .add(x, 'w')
-    .add(y, 'd')
-    .format();
+    //   const date = moment()
+    //     .subtract(1, 'y')
+    //     .add(1, 'd')
+    //     .add(x, 'w')
+    //     .add(y, 'd')
+    //     .format();
+    const date = moment()
+        .startOf('year')       // Start from Jan 1 this year
+        .add(x, 'w')           // Add random weeks (columns)
+        .add(y, 'd')           // Add random days (rows)
+        .format();
 
-  const data = {
-    date,
-    random: Math.random() // ensures content changes each time
-  };
+    const data = {
+        date,
+        random: Math.random() // ensures content changes each time
+    };
 
-  console.log(`📅 Committing date: ${date} (${n} left)`);
+    console.log(`📅 Committing date: ${date} (${n} left)`);
 
-  try {
-    // Write to data.json
-    await jsonfile.writeFile(path, data);
+    try {
+        // Write to data.json
+        await jsonfile.writeFile(path, data);
 
-    // Commit with custom date
-    await git.add([path]);
-    await git.commit(date, { '--date': date });
+        // Commit with custom date
+        await git.add([path]);
+        await git.commit(date, { '--date': date });
 
-    // Recursive call
-    await makeCommits(n - 1);
-  } catch (err) {
-    console.error("❌ Error during commit:", err);
-  }
+        // Recursive call
+        await makeCommits(n - 1);
+    } catch (err) {
+        console.error("❌ Error during commit:", err);
+    }
 };
 
 // Generate 100 commits
