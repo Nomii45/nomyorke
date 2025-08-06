@@ -82,9 +82,9 @@ const makeCommits = async (n) => {
     //     .add(y, 'd')
     //     .format();
     const date = moment()
-        .startOf('year')       // Start from Jan 1 this year
-        .add(x, 'w')           // Add random weeks (columns)
-        .add(y, 'd')           // Add random days (rows)
+        .startOf('year')     
+        .add(x, 'w')           
+        .add(y, 'd')           
         .format();
 
     const data = {
