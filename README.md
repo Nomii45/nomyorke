@@ -1,2 +1,2 @@
 # nomyorke
-Where logic meets art—lines of code that breathe life into ideas...
+Where logic meets art—lines of code that breathe life into ideas.
